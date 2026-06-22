@@ -31,7 +31,7 @@ const formatTimestamp = (dateString) => {
 
 // --- COMPONENTS ---
 
-const NoteCard = ({ note, onEdit, onDelete }) => {
+const NoteCard = ({ note, onEdit, onDelete, onView }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -52,9 +52,13 @@ const NoteCard = ({ note, onEdit, onDelete }) => {
           {formatTimestamp(note.createdAt)}
         </span>
       </div>
-      <p className="text-gray-600 text-sm whitespace-pre-wrap flex-grow line-clamp-4">
-        {note.content}
-      </p>
+
+      {/* REVERTED: Standard, non-clickable text area */}
+      <div className="flex-grow">
+        <p className="text-gray-600 text-sm whitespace-pre-wrap line-clamp-4 group-hover:text-gray-800 transition-colors">
+          {note.content}
+        </p>
+      </div>
 
       <div className="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center opacity-70 group-hover:opacity-100 transition-opacity">
         <button
@@ -66,10 +70,15 @@ const NoteCard = ({ note, onEdit, onDelete }) => {
         </button>
 
         <div className="flex gap-2">
-          <button onClick={() => onEdit(note)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+          {/* THE EXPAND BUTTON: This is now the only way to open the viewer */}
+          <button onClick={() => onView(note)} className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors" title="Read Note">
+            <Maximize2 size={16} />
+          </button>
+
+          <button onClick={() => onEdit(note)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors" title="Edit Note">
             <Edit size={16} />
           </button>
-          <button onClick={() => onDelete(note._id)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+          <button onClick={() => onDelete(note._id)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors" title="Delete Note">
             <Trash2 size={16} />
           </button>
         </div>
