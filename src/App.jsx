@@ -6,7 +6,7 @@ import {
 
 // --- CONFIGURATION ---
 // Change this if your backend runs on a different port (e.g., 5000)
-const API_BASE_URL = 'http://localhost:5000/api/v1';
+const API_BASE_URL = 'https://notesapp-backend-80vm.onrender.com/api/v1';
 const AUTH_URL = `${API_BASE_URL}/auth`;
 const NOTES_URL = `${API_BASE_URL}/notes`;
 const COLLECTIONS_URL = `${API_BASE_URL}/collections`;
