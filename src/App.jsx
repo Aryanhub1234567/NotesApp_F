@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Clipboard, Check, Trash2, Edit, Plus, Folder,
-  FolderOpen, LogOut, FileText, X, Menu
+  FolderOpen, LogOut, FileText, X, Menu, Maximize2
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
@@ -164,6 +164,7 @@ const AuthScreen = ({ onLogin }) => {
 export default function App() {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [viewingNote, setViewingNote] = useState(null);
 
   const [token, setToken] = useState(localStorage.getItem('token') || null);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
@@ -443,6 +444,7 @@ const loadData = async () => {
                   note={note}
                   onEdit={openEditNote}
                   onDelete={handleDeleteNote}
+                  onView={setViewingNote}
                 />
               ))}
             </div>
