@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Clipboard, Check, Trash2, Edit, Plus, Folder,
-  FolderOpen, LogOut, FileText, X
+  FolderOpen, LogOut, FileText, X, Menu
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
@@ -153,6 +153,9 @@ const AuthScreen = ({ onLogin }) => {
 };
 
 export default function App() {
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const [token, setToken] = useState(localStorage.getItem('token') || null);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
 
@@ -298,9 +301,18 @@ const loadData = async () => {
   if (!token) return <AuthScreen onLogin={handleLogin} />;
 
   return (
-    <div className="flex h-screen bg-white font-sans text-gray-800">
-      {/* SIDEBAR */}
-      <div className="w-64 bg-gray-50 border-r border-gray-200 flex flex-col">
+    <div className="flex h-screen bg-white font-sans text-gray-800 overflow-hidden">
+
+      {/* NEW: Dark Overlay for mobile when sidebar is open */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 z-20 md:hidden backdrop-blur-sm"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* UPDATED SIDEBAR: Added absolute positioning and slide animations */}
+      <div className={`fixed inset-y-0 left-0 z-30 w-64 bg-gray-50 border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-4 border-b border-gray-200 flex items-center gap-3">
           <div className="w-8 h-8 bg-blue-600 rounded text-white flex items-center justify-center">
             <FileText size={18} />
@@ -373,21 +385,37 @@ const loadData = async () => {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="flex-1 flex flex-col h-screen relative bg-[#fcfcfc]">
-        {/* Header */}
-        <header className="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-white">
-          <h1 className="text-2xl font-bold text-gray-800">
-            {activeCollection === null ? 'All Notes' :
-             activeCollection === 'uncategorized' ? 'Uncategorized' :
-             collections.find(c => c._id === activeCollection)?.name || 'Notes'}
-          </h1>
+      <div className="flex-1 flex flex-col h-screen relative bg-[#fcfcfc] min-w-0">
+
+        {/* UPDATED HEADER */}
+        <header className="px-4 md:px-8 py-4 md:py-6 border-b border-gray-100 flex justify-between items-center bg-white gap-4">
+
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Mobile Hamburger Button */}
+            <button
+              className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
+              onClick={() => setIsSidebarOpen(true)}
+            >
+              <Menu size={20} />
+            </button>
+
+            {/* Title with truncation so it doesn't break the layout */}
+            <h1 className="text-xl md:text-2xl font-bold text-gray-800 truncate">
+              {activeCollection === null ? 'All Notes' :
+               activeCollection === 'uncategorized' ? 'Uncategorized' :
+               collections.find(c => c._id === activeCollection)?.name || 'Notes'}
+            </h1>
+          </div>
+
+          {/* New Note Button protected from shrinking */}
           <button
             onClick={() => {
               setNoteTitle(''); setNoteContent(''); setEditingNoteId(null); setShowNoteForm(true);
             }}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm"
+            className="shrink-0 bg-blue-600 hover:bg-blue-700 text-white px-3 md:px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm text-sm md:text-base"
           >
-            <Plus size={18} /> New Note
+            <Plus size={18} />
+            <span className="hidden sm:inline">New Note</span>
           </button>
         </header>
 
