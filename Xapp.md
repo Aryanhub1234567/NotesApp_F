@@ -486,54 +486,6 @@ const loadData = async () => {
             </div>
           </div>
         )}
-
-        {/* 👇 THIS IS WHERE THE NEW MODAL GOES 👇 */}
-        {/* View Note Modal Overlay */}
-        {viewingNote && (
-          <div
-            className="absolute inset-0 bg-gray-900/40 flex items-center justify-center p-4 z-50 backdrop-blur-sm"
-            onClick={() => setViewingNote(null)}
-          >
-            <div
-              className="bg-white rounded-2xl w-full max-w-2xl shadow-xl flex flex-col max-h-[90vh]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-start p-6 border-b border-gray-100">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-800 break-words pr-4">{viewingNote.title}</h2>
-                  <p className="text-sm text-gray-400 mt-1">
-                    {viewingNote.createdAt ? formatTimestamp(viewingNote.createdAt) : ''}
-                  </p>
-                </div>
-                <button onClick={() => setViewingNote(null)} className="text-gray-400 hover:text-gray-600 shrink-0 p-1 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors">
-                  <X size={20} />
-                </button>
-              </div>
-
-              <div className="p-6 overflow-y-auto">
-                <p className="text-gray-700 whitespace-pre-wrap text-base leading-relaxed">
-                  {viewingNote.content}
-                </p>
-              </div>
-
-              <div className="p-4 border-t border-gray-100 flex justify-end gap-3 bg-gray-50 rounded-b-2xl">
-                 <button
-                   onClick={() => {
-                     setViewingNote(null);
-                     openEditNote(viewingNote);
-                   }}
-                   className="px-4 py-2 flex items-center gap-2 rounded-lg text-blue-600 font-medium hover:bg-blue-100 transition"
-                 >
-                   <Edit size={16} /> Edit Note
-                 </button>
-                 <button onClick={() => setViewingNote(null)} className="px-5 py-2 rounded-lg bg-gray-800 text-white font-medium hover:bg-gray-900 transition">
-                   Close
-                 </button>
-              </div>
-            </div>
-          </div>
-        )}
-
       </div>
     </div>
   );
