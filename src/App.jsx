@@ -515,7 +515,19 @@ const loadData = async () => {
 
               <div className="p-6 overflow-y-auto">
                 <div className="prose prose-blue prose-sm md:prose-base max-w-none text-gray-700">
-                  <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm, remarkBreaks]}
+                    components={{
+                      // Force ordered lists to show numbers and add spacing
+                      ol: (props) => <ol className="list-decimal list-inside space-y-2 my-4 ml-2" {...props} />,
+                      // Force unordered lists to show bullets and add spacing
+                      ul: (props) => <ul className="list-disc list-inside space-y-2 my-4 ml-2" {...props} />,
+                      // Add slight spacing between list items
+                      li: (props) => <li className="ml-2" {...props} />,
+                      // Ensure paragraphs have breathing room
+                      p: (props) => <p className="mb-4 last:mb-0" {...props} />
+                    }}
+                  >
                     {viewingNote.content}
                   </ReactMarkdown>
                 </div>
