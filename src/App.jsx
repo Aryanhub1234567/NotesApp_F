@@ -4,6 +4,8 @@ import {
   FolderOpen, LogOut, FileText, X, Menu, Maximize2
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 
 // --- CONFIGURATION ---
 // Change this if your backend runs on a different port (e.g., 5000)
@@ -513,7 +515,9 @@ const loadData = async () => {
 
               <div className="p-6 overflow-y-auto">
                 <div className="prose prose-blue prose-sm md:prose-base max-w-none text-gray-700">
-                  <ReactMarkdown>{viewingNote.content}</ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                    {viewingNote.content}
+                  </ReactMarkdown>
                 </div>
               </div>
 
