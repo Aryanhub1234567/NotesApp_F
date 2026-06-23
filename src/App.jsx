@@ -3,6 +3,7 @@ import {
   Clipboard, Check, Trash2, Edit, Plus, Folder,
   FolderOpen, LogOut, FileText, X, Menu, Maximize2
 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 // --- CONFIGURATION ---
 // Change this if your backend runs on a different port (e.g., 5000)
@@ -511,9 +512,9 @@ const loadData = async () => {
               </div>
 
               <div className="p-6 overflow-y-auto">
-                <p className="text-gray-700 whitespace-pre-wrap text-base leading-relaxed">
-                  {viewingNote.content}
-                </p>
+                <div className="prose prose-blue prose-sm md:prose-base max-w-none text-gray-700">
+                  <ReactMarkdown>{viewingNote.content}</ReactMarkdown>
+                </div>
               </div>
 
               <div className="p-4 border-t border-gray-100 flex justify-end gap-3 bg-gray-50 rounded-b-2xl">
