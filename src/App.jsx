@@ -518,6 +518,12 @@ const loadData = async () => {
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm, remarkBreaks]}
                     components={{
+
+                      // NEW: Force Headings to have specific sizes, weights, and margins
+                      h1: (props) => <h1 className="text-3xl font-bold mt-6 mb-4 text-gray-900" {...props} />,
+                      h2: (props) => <h2 className="text-2xl font-bold mt-5 mb-3 text-gray-800" {...props} />,
+                      h3: (props) => <h3 className="text-xl font-bold mt-4 mb-2 text-gray-800" {...props} />,
+
                       // Force ordered lists to show numbers and add spacing
                       ol: (props) => <ol className="list-decimal list-inside space-y-2 my-4 ml-2" {...props} />,
                       // Force unordered lists to show bullets and add spacing
