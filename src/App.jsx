@@ -6,9 +6,12 @@ import {
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
-
+import { IKContext, IKUpload } from 'imagekitio-react';
 // --- CONFIGURATION ---
 // Change this if your backend runs on a different port (e.g., 5000)
+const dotenv = require('dotenv');
+dotenv.config();
+
 const API_BASE_URL = 'https://notesapp-backend-80vm.onrender.com/api/v1';
 const AUTH_URL = `${API_BASE_URL}/auth`;
 const NOTES_URL = `${API_BASE_URL}/notes`;
@@ -180,11 +183,33 @@ export default function App() {
   const [showNoteForm, setShowNoteForm] = useState(false);
   const [noteTitle, setNoteTitle] = useState('');
   const [noteContent, setNoteContent] = useState('');
+  const [attachments, setAttachments] = useState([]);// NEW: Tracks images for the current note
   const [editingNoteId, setEditingNoteId] = useState(null);
 
   // Collection Form State
   const [newCollectionName, setNewCollectionName] = useState('');
   const [showColForm, setShowColForm] = useState(false);
+
+  // Tell ImageKit how to fetch signatures from your backend.
+  const authenticator = async () => {
+    try {
+      // Remember to change this URL if your backend runs on a different port!
+      const response = await fetch(`${API_BASE_URL}/imagekit/auth`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}` // Pass the JWT so your protected route accepts it
+        }
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch ImageKit signature');
+
+      const data = await response.json();
+      return data; // ImageKit expects an object with { signature, expire, token }
+    } catch (error) {
+      console.error(error);
+      throw new Error('Authentication request failed');
+    }
+  };
 
   // --- API HELPERS ---
   const fetchOptions = (method = 'GET', body = null) => ({
@@ -196,7 +221,7 @@ export default function App() {
     body: body ? JSON.stringify(body) : null
   });
 
-const loadData = async () => {
+  const loadData = async () => {
     try {
       // 1. Fetch Collections
       const colRes = await fetch(COLLECTIONS_URL, fetchOptions());
@@ -255,7 +280,8 @@ const loadData = async () => {
     const payload = {
       title: noteTitle,
       content: noteContent,
-      collectionId: activeCollection !== 'uncategorized' ? activeCollection : null
+      collectionId: activeCollection !== 'uncategorized' ? activeCollection : null,
+      attachments: attachments //NEW
     };
 
     try {
@@ -286,6 +312,7 @@ const loadData = async () => {
     setNoteContent(note.content);
     setEditingNoteId(note._id);
     setShowNoteForm(true);
+    setAttachments(note.attachments || []);
   };
 
   const handleAddCollection = async (e) => {
@@ -477,6 +504,41 @@ const loadData = async () => {
                   className="w-full flex-grow resize-none outline-none text-gray-600 mb-6 placeholder-gray-300 min-h-[200px]"
                   value={noteContent} onChange={e => setNoteContent(e.target.value)}
                 />
+
+                {/* NEW: ImageKit Upload Section */}
+                <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
+                  <IKContext
+                    publicKey= {process.env.IMAGEKIT_PUBLIC_KEY} // Replace with your actual public key
+                    urlEndpoint={process.env.IMAGEKIT_URL_ENDPOINT} // Replace with your actual endpoint
+                    authenticator={authenticator}
+                  >
+                    <IKUpload
+                      fileName="note-attachment"
+                      onSuccess={(res) => setAttachments(prev => [...prev, res.url])}
+                      onError={(err) => console.error("Upload failed:", err)}
+                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer"
+                    />
+                  </IKContext>
+
+                  {/* Image Preview Grid */}
+                  {attachments.length > 0 && (
+                    <div className="flex flex-wrap gap-3 mt-4">
+                      {attachments.map((url, index) => (
+                        <div key={index} className="relative group">
+                          <img src={url} alt="attachment" className="h-20 w-20 object-cover rounded-lg shadow-sm border border-gray-200" />
+                          <button
+                            type="button"
+                            onClick={() => setAttachments(attachments.filter((_, i) => i !== index))}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X size={12} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
                   <button type="button" onClick={() => setShowNoteForm(false)} className="px-5 py-2 rounded-lg text-gray-600 font-medium hover:bg-gray-100 transition">
                     Cancel
