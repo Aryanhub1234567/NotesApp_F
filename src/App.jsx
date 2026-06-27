@@ -9,8 +9,6 @@ import remarkBreaks from 'remark-breaks';
 import { IKContext, IKUpload } from '@imagekit/react';
 // --- CONFIGURATION ---
 // Change this if your backend runs on a different port (e.g., 5000)
-const dotenv = require('dotenv');
-dotenv.config();
 
 const API_BASE_URL = 'https://notesapp-backend-80vm.onrender.com/api/v1';
 const AUTH_URL = `${API_BASE_URL}/auth`;
@@ -508,8 +506,8 @@ export default function App() {
                 {/* NEW: ImageKit Upload Section */}
                 <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
                   <IKContext
-                    publicKey= {process.env.IMAGEKIT_PUBLIC_KEY} // Replace with your actual public key
-                    urlEndpoint={process.env.IMAGEKIT_URL_ENDPOINT} // Replace with your actual endpoint
+                    publicKey= "public_CpSO67Q+08HRKwnZobSe0t/DbkM=" // Replace with your actual public key
+                    urlEndpoint= "https://ik.imagekit.io/aryandev" // Replace with your actual endpoint
                     authenticator={authenticator}
                   >
                     <IKUpload
