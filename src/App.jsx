@@ -6,7 +6,7 @@ import {
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
-import { IKContext, IKUpload } from '@imagekit/react';
+import { upload } from '@imagekit/react';
 // --- CONFIGURATION ---
 // Change this if your backend runs on a different port (e.g., 5000)
 
@@ -217,6 +217,33 @@ export default function App() {
     } catch (error) {
       console.error(error);
       throw new Error('Authentication request failed');
+    }
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      // 1. Get the secure signature from your backend
+      const authParams = await authenticator();
+
+      // 2. Upload the file using the new SDK method
+      const response = await upload({
+        file: file,
+        fileName: file.name || 'attachment',
+        publicKey: "public_CpSO67Q+08HRKwnZobSe0t/DbkM=",
+        urlEndpoint: "https://ik.imagekit.io/aryandev",
+        token: authParams.token,
+        signature: authParams.signature,
+        expire: authParams.expire,
+      });
+
+      // 3. Save the new URL into your attachments state
+      setAttachments(prev => [...prev, response.url]);
+    } catch (err) {
+      console.error("Upload failed:", err);
+      alert("Failed to upload image. Please try again.");
     }
   };
 
@@ -514,20 +541,17 @@ export default function App() {
                   value={noteContent} onChange={e => setNoteContent(e.target.value)}
                 />
 
-                {/* NEW: ImageKit Upload Section */}
+
+                {/* NEW: ImageKit Upload Section (Updated for @imagekit/react) */}
                 <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
-                  <IKContext
-                    publicKey= "public_CpSO67Q+08HRKwnZobSe0t/DbkM=" // Replace with your actual public key
-                    urlEndpoint= "https://ik.imagekit.io/aryandev" // Replace with your actual endpoint
-                    authenticator={authenticator}
-                  >
-                    <IKUpload
-                      fileName="note-attachment"
-                      onSuccess={(res) => setAttachments(prev => [...prev, res.url])}
-                      onError={(err) => console.error("Upload failed:", err)}
-                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer"
-                    />
-                  </IKContext>
+
+                  {/* Standard HTML File Input */}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer"
+                  />
 
                   {/* Image Preview Grid */}
                   {attachments.length > 0 && (
