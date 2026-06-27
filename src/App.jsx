@@ -6,7 +6,7 @@ import {
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
-import { IKContext, IKUpload } from 'imagekitio-react';
+import { IKContext, IKUpload } from '@imagekit/react';
 // --- CONFIGURATION ---
 // Change this if your backend runs on a different port (e.g., 5000)
 const dotenv = require('dotenv');
