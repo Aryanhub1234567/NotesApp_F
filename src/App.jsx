@@ -17,8 +17,10 @@ const COLLECTIONS_URL = `${API_BASE_URL}/collections`;
 
 // --- UTILITIES ---
 const formatTimestamp = (dateString) => {
+  if (!dateString) return ''; //Safeguard 1: Missing date
   const now = new Date();
   const past = new Date(dateString);
+  if (isNaN(past.getTime())) return ''; //Safeguard 2: Corrupted date
   const msPerMinute = 60 * 1000;
   const msPerHour = msPerMinute * 60;
   const msPerDay = msPerHour * 24;
@@ -165,6 +167,15 @@ const AuthScreen = ({ onLogin }) => {
   );
 };
 
+const getSafeUser = () => {
+  try {
+    const storedUser = localStorage.getItem('user');
+    return storedUser && storedUser !== 'undefined' ? JSON.parse(storedUser) : null;
+  } catch (e) {
+    return null;
+  }
+};
+
 export default function App() {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -172,7 +183,7 @@ export default function App() {
 
   const [token, setToken] = useState(localStorage.getItem('token') || null);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
-
+  const [user, setUser] = useState(getSafeUser()); // Use the safe parser here!
   const [notes, setNotes] = useState([]);
   const [collections, setCollections] = useState([]);
   const [activeCollection, setActiveCollection] = useState(null); // null = all notes
