@@ -182,7 +182,7 @@ export default function App() {
   const [viewingNote, setViewingNote] = useState(null);
 
   const [token, setToken] = useState(localStorage.getItem('token') || null);
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
+  //const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
   const [user, setUser] = useState(getSafeUser()); // Use the safe parser here!
   const [notes, setNotes] = useState([]);
   const [collections, setCollections] = useState([]);
