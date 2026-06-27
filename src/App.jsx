@@ -66,6 +66,20 @@ const NoteCard = ({ note, onEdit, onDelete, onView }) => {
         </p>
       </div>
 
+      {/* NEW: Attachment Thumbnails in Card */}
+      {note.attachments && note.attachments.length > 0 && (
+        <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+          {note.attachments.map((url, index) => (
+            <img
+              key={index}
+              src={url}
+              alt="attachment"
+              className="h-12 w-12 object-cover rounded-md border border-gray-200 shrink-0"
+            />
+          ))}
+        </div>
+      )}
+
       <div className="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center opacity-70 group-hover:opacity-100 transition-opacity">
         <button
           onClick={handleCopy}
@@ -631,6 +645,24 @@ export default function App() {
                   >
                     {viewingNote.content}
                   </ReactMarkdown>
+
+                  {/* NEW: Full-size Images in Viewer */}
+                  {viewingNote.attachments && viewingNote.attachments.length > 0 && (
+                    <div className="mt-6 flex flex-col gap-4">
+                      <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Attachments</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {viewingNote.attachments.map((url, index) => (
+                          <a key={index} href={url} target="_blank" rel="noopener noreferrer" className="block group">
+                            <img
+                              src={url}
+                              alt="attachment"
+                              className="w-full h-auto rounded-lg border border-gray-200 shadow-sm group-hover:shadow-md transition-shadow"
+                            />
+                          </a>
+                        ))}
+                  </div>
+                </div>
+              )}
                 </div>
               </div>
 
