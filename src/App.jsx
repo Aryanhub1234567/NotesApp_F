@@ -10,7 +10,7 @@ import { upload } from '@imagekit/react';
 // --- CONFIGURATION ---
 // Change this if your backend runs on a different port (e.g., 5000)
 
-const API_BASE_URL = 'https://notes-app-backend-rust.vercel.app/api/v1';
+const API_BASE_URL = 'https://notesapp-backend-80vm.onrender.com/api/v1';
 const AUTH_URL = `${API_BASE_URL}/auth`;
 const NOTES_URL = `${API_BASE_URL}/notes`;
 const COLLECTIONS_URL = `${API_BASE_URL}/collections`;
