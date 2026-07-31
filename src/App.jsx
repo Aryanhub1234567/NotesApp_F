@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import { upload } from '@imagekit/react';
+import { ShimmerButton } from "@/components/ui/shimmer-button"
 // --- CONFIGURATION ---
 // Change this if your backend runs on a different port (e.g., 5000)
 
@@ -498,15 +499,20 @@ export default function App() {
           </div>
 
           {/* New Note Button protected from shrinking */}
-          <button
+          <ShimmerButton
             onClick={() => {
-              setNoteTitle(''); setNoteContent(''); setEditingNoteId(null); setShowNoteForm(true);
+              setNoteTitle("");
+              setNoteContent("");
+              setEditingNoteId(null);
+              setShowNoteForm(true);
             }}
-            className="shrink-0 bg-blue-600 hover:bg-blue-700 text-white px-3 md:px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm text-sm md:text-base"
+            className="shrink-0 shadow-lg"
           >
-            <Plus size={18} />
-            <span className="hidden sm:inline">New Note</span>
-          </button>
+            <div className="flex items-center gap-2 text-white">
+              <Plus size={18} />
+              <span className="hidden sm:inline">New Note</span>
+            </div>
+          </ShimmerButton>
         </header>
 
         {/* Note Grid */}
