@@ -8,6 +8,7 @@ import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import { upload } from '@imagekit/react';
 import { ShimmerButton } from "./components/ui/shimmer-button"
+import { TypingAnimation } from "./components/ui/typing-animation"
 // --- CONFIGURATION ---
 // Change this if your backend runs on a different port (e.g., 5000)
 
@@ -492,11 +493,23 @@ export default function App() {
 
             {/* Title with truncation so it doesn't break the layout */}
             <h1 className="text-xl md:text-2xl font-bold text-gray-800 truncate">
-              {activeCollection === null ? 'All Notes' :
-               activeCollection === 'uncategorized' ? 'Uncategorized' :
-               collections.find(c => c._id === activeCollection)?.name || 'Notes'}
-            </h1>
-          </div>
+               {activeCollection === null ? (
+                <TypingAnimation
+                  words={["Capture Ideas", "Write Notes", "Stay Organized", "Never Forget", "Quick Thoughts", "Daily Journal", "Meeting Notes", "To-do Lists", "Brain Dumps", "Plan Smarter", "Save Memories", "Think Freely"]}
+                  blinkCursor={true}
+                  pauseDelay={2000}
+                  loop={false}
+                  className="inline-block"
+                >
+                  All Notes
+                </TypingAnimation>
+               ) : activeCollection === "uncategorized" ? (
+                "Uncategorized"
+               ) : (
+                collections.find((c) => c._id === activeCollection)?.name || "Notes"
+               )}
+             </h1>
+             </div>
 
           {/* New Note Button protected from shrinking */}
           <ShimmerButton

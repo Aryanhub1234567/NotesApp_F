@@ -22,3 +22,13 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
 })
+
+
+
+{/* Title with truncation so it doesn't break the layout */}
+            <h1 className="text-xl md:text-2xl font-bold text-gray-800 truncate">
+              {activeCollection === null ? 'All Notes' :
+               activeCollection === 'uncategorized' ? 'Uncategorized' :
+               collections.find(c => c._id === activeCollection)?.name || 'Notes'}
+            </h1>
+          </div>
