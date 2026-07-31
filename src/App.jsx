@@ -7,7 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import { upload } from '@imagekit/react';
-import { ShimmerButton } from "@/components/ui/shimmer-button"
+import { ShimmerButton } from "./components/ui/shimmer-button"
 // --- CONFIGURATION ---
 // Change this if your backend runs on a different port (e.g., 5000)
 
