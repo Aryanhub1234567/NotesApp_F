@@ -492,7 +492,7 @@ export default function App() {
             </button>
 
             {/* Title with truncation so it doesn't break the layout */}
-            <h1 className="text-xl md:text-2xl font-bold text-gray-800 truncate">
+            <h1 className="text-xl md:text-3xl font-bold text-gray-800 truncate">
                {activeCollection === null ? (
                 <TypingAnimation
                   words={["Capture Ideas", "Write Notes", "Stay Organized", "Never Forget", "Quick Thoughts", "Daily Journal", "Meeting Notes", "To-do Lists", "Brain Dumps", "Plan Smarter", "Save Memories", "Think Freely"]}
