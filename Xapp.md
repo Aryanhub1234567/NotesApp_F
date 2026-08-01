@@ -32,3 +32,36 @@ export default defineConfig({
                collections.find(c => c._id === activeCollection)?.name || 'Notes'}
             </h1>
           </div>
+
+
+
+  // --- COMPONENTS ---
+
+const NoteCard = ({ note, onEdit, onDelete, onView }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(`${note.title}\n\n${note.content}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
+  return (
+  <div className="bg-white border border-gray-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
+      <div className="flex justify-between items-start mb-2">
+        <h3 className="font-semibold text-gray-800 line-clamp-1">{note.title}</h3>
+        <span className="text-xs text-gray-400 whitespace-nowrap ml-2">
+          {formatTimestamp(note.createdAt)}
+        </span>
+      </div>
+
+      {/* REVERTED: Standard, non-clickable text area */}
+      <div className="flex-grow">
+        <p className="text-gray-600 text-sm whitespace-pre-wrap line-clamp-4 group-hover:text-gray-800 transition-colors">
+          {note.content}
+        </p>
+      </div>

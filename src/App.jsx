@@ -9,6 +9,9 @@ import remarkBreaks from 'remark-breaks';
 import { upload } from '@imagekit/react';
 import { ShimmerButton } from "./components/ui/shimmer-button"
 import { TypingAnimation } from "./components/ui/typing-animation"
+import { ShineBorder } from "./components/ui/shine-border"
+import { Meteors } from "./components/ui/meteors";
+//import { useTheme } from "next-themes"
 // --- CONFIGURATION ---
 // Change this if your backend runs on a different port (e.g., 5000)
 
@@ -53,12 +56,21 @@ const NoteCard = ({ note, onEdit, onDelete, onView }) => {
   };
 
   return (
-    <div className="bg-white border border-gray-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
-      <div className="flex justify-between items-start mb-2">
-        <h3 className="font-semibold text-gray-800 line-clamp-1">{note.title}</h3>
-        <span className="text-xs text-gray-400 whitespace-nowrap ml-2">
-          {formatTimestamp(note.createdAt)}
-        </span>
+    <div className="relative overflow-hidden bg-white border border-gray-200 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
+      <ShineBorder
+        shineColor="#17177F"
+        className="pointer-events-none"
+      />
+
+      <div className="relative z-10 flex flex-col h-full">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="font-semibold text-gray-800 line-clamp-1">
+            {note.title}
+          </h3>
+          <span className="text-xs text-gray-400 whitespace-nowrap ml-2">
+            {formatTimestamp(note.createdAt)}
+          </span>
+        </div>
       </div>
 
       {/* REVERTED: Standard, non-clickable text area */}
@@ -406,7 +418,7 @@ export default function App() {
       {/* UPDATED SIDEBAR: Added absolute positioning and slide animations */}
       <div className={`fixed inset-y-0 left-0 z-30 w-64 bg-gray-50 border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-4 border-b border-gray-200 flex items-center gap-3">
-          <div className="w-8 h-8 bg-blue-600 rounded text-white flex items-center justify-center">
+          <div className="w-8 h-8 bg-[#17177F] rounded text-white flex items-center justify-center">
             <FileText size={18} />
           </div>
           <span className="font-semibold text-lg">My Notes</span>
@@ -417,13 +429,13 @@ export default function App() {
 
           <button
             onClick={() => setActiveCollection(null)}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition ${activeCollection === null ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition ${activeCollection === null ? 'bg-blue-100 text-[#23239A]' : 'text-gray-600 hover:bg-gray-100'}`}
           >
             <FolderOpen size={18} /> All Notes
           </button>
           <button
             onClick={() => setActiveCollection('uncategorized')}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition ${activeCollection === 'uncategorized' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition ${activeCollection === 'uncategorized' ? 'bg-blue-100 text-[#23239A]' : 'text-gray-600 hover:bg-gray-100'}`}
           >
             <Folder size={18} /> Uncategorized
           </button>
@@ -477,7 +489,7 @@ export default function App() {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="flex-1 flex flex-col h-screen relative bg-[#fcfcfc] min-w-0">
+      <div className="flex h-screen min-w-0 flex-col">
 
         {/* UPDATED HEADER */}
         <header className="px-4 md:px-8 py-4 md:py-6 border-b border-gray-100 flex justify-between items-center bg-white gap-4">
@@ -527,29 +539,32 @@ export default function App() {
             </div>
           </ShimmerButton>
         </header>
-
-        {/* Note Grid */}
-        <div className="flex-1 overflow-y-auto p-8">
-          {notes.length === 0 ? (
-             <div className="flex flex-col items-center justify-center h-full text-gray-400 mt-20">
-               <FileText size={48} className="mb-4 opacity-50" />
-               <p>No notes found in this view.</p>
-             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {notes.map(note => (
-                <NoteCard
-                  key={note._id}
-                  note={note}
-                  onEdit={openEditNote}
-                  onDelete={handleDeleteNote}
-                  onView={setViewingNote}
-                />
-              ))}
-            </div>
-          )}
+        <main className="relative flex flex-col flex-1 overflow-hidden bg-[#fcfcfc]">
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <Meteors number={30} />
         </div>
-
+          {/* Note Grid */}
+          <div className="relative z-10 flex-1 overflow-y-auto p-8">
+            {notes.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-gray-400 mt-20">
+                <FileText size={48} className="mb-4 opacity-50" />
+                <p>No notes found in this view.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {notes.map(note => (
+                  <NoteCard
+                    key={note._id}
+                    note={note}
+                    onEdit={openEditNote}
+                    onDelete={handleDeleteNote}
+                    onView={setViewingNote}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </main>
         {/* Create/Edit Modal overlay */}
         {showNoteForm && (
           <div className="absolute inset-0 bg-gray-900/40 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
@@ -609,7 +624,7 @@ export default function App() {
                   <button type="button" onClick={() => setShowNoteForm(false)} className="px-5 py-2 rounded-lg text-gray-600 font-medium hover:bg-gray-100 transition">
                     Cancel
                   </button>
-                  <button type="submit" className="px-5 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition">
+                  <button type="submit" className="px-5 py-2 rounded-lg bg-[#17177F] text-white font-medium hover:bg-[#23239A] transition">
                     Save Note
                   </button>
                 </div>
